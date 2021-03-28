@@ -15,6 +15,7 @@ import GoalItem from "./components/GoalItem";
 export default function App() {
   const [goalsList, setGoalsList] = useState([]);
   const [showModal, setShowModal] = useState(false);
+
   const addGoal = (goal) => {
     setGoalsList((currentGoals) => [
       ...currentGoals,
@@ -22,12 +23,15 @@ export default function App() {
     ]);
     setShowModal(false);
   };
+
   const deleteHandler = (id) => {
     setGoalsList((currentGoals) => {
       return currentGoals.filter((goal) => goal.key !== id);
     });
   };
+
   const closeDialog = () => setShowModal(false);
+
   return (
     <View style={styles.root}>
       <Button title="Add New Goal" onPress={() => setShowModal(true)} />

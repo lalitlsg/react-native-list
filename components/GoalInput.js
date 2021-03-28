@@ -1,12 +1,29 @@
-import React, { useState } from "react";
-import { View, TextInput, Button, StyleSheet, Modal } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, TextInput, Button, StyleSheet, Modal, Text } from "react-native";
 
 const GoalInput = ({ addGoal, visible, closeDialog }) => {
   const [enteredData, setEnteredData] = useState("");
+  const [showError, setShowError] = useState(false);
+
+  useEffect(() => {
+    if (enteredData) setShowError(false);
+  }, [enteredData]);
+
   const goalHandler = (value) => setEnteredData(value);
+
   const addGoalHandler = () => {
-    addGoal(enteredData);
-    setEnteredData("");
+    if (enteredData) {
+      addGoal(enteredData);
+      setEnteredData("");
+      setShowError(false);
+    } else {
+      setShowError(true);
+    }
+  };
+
+  const cancelHandler = () => {
+    setShowError(false);
+    closeDialog();
   };
 
   return (
@@ -18,9 +35,12 @@ const GoalInput = ({ addGoal, visible, closeDialog }) => {
           onChangeText={goalHandler}
           value={enteredData}
         />
+        {showError && (
+          <Text style={styles.errorMessage}>Please Enter Goal</Text>
+        )}
         <View style={styles.buttonContainer}>
           <View style={styles.buttonStyles}>
-            <Button title="Cancel" color="#ff1a1a" onPress={closeDialog} />
+            <Button title="Cancel" color="#ff1a1a" onPress={cancelHandler} />
           </View>
           <View style={styles.buttonStyles}>
             <Button title="Add" color="#4d4dff" onPress={addGoalHandler} />
@@ -51,6 +71,14 @@ const styles = StyleSheet.create({
   },
   buttonStyles: {
     width: "40%",
+  },
+  errorMessage: {
+    marginBottom: 15,
+    color: "#b30000",
+    borderColor: "#b30000",
+    borderWidth: 1,
+    padding: 10,
+    backgroundColor: "#ffe5e5",
   },
 });
 
