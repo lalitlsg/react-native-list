@@ -23,6 +23,7 @@ const GoalInput = ({ addGoal, visible, closeDialog }) => {
 
   const cancelHandler = () => {
     setShowError(false);
+    setEnteredData("");
     closeDialog();
   };
 
