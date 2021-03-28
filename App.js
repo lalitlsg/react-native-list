@@ -14,19 +14,37 @@ import GoalItem from "./components/GoalItem";
 
 export default function App() {
   const [goalsList, setGoalsList] = useState([]);
+  const [showModal, setShowModal] = useState(false);
   const addGoal = (goal) => {
     setGoalsList((currentGoals) => [
       ...currentGoals,
       { key: Math.random().toString(), goal },
     ]);
+    setShowModal(false);
   };
-
+  const deleteHandler = (id) => {
+    setGoalsList((currentGoals) => {
+      return currentGoals.filter((goal) => goal.key !== id);
+    });
+  };
+  const closeDialog = () => setShowModal(false);
   return (
     <View style={styles.root}>
-      <GoalInput addGoal={addGoal} />
+      <Button title="Add New Goal" onPress={() => setShowModal(true)} />
+      <GoalInput
+        addGoal={addGoal}
+        visible={showModal}
+        closeDialog={closeDialog}
+      />
       <FlatList
         data={goalsList}
-        renderItem={(itemData) => <GoalItem title={itemData.item.goal} />}
+        renderItem={(itemData) => (
+          <GoalItem
+            id={itemData.item.key}
+            title={itemData.item.goal}
+            deleteItem={deleteHandler}
+          />
+        )}
       />
       <StatusBar style="auto" />
     </View>
